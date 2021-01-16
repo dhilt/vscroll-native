@@ -1,5 +1,4 @@
 import {
-  Workflow,
   IDatasource,
   Item,
   IAdapterItem,
@@ -7,46 +6,37 @@ import {
 
 import consumer from './version';
 
+import { Id, workflowStorage } from './workflow-storage';
+
 export type Template<MyItem = unknown> = (item: IAdapterItem<MyItem>) => string;
 
 export class Scroller<MyItem = unknown> {
+  id: Id;
   viewport: HTMLElement;
   datasource: IDatasource<MyItem>;
   template: Template<MyItem>;
   scrollable: HTMLElement;
 
-  workflow: Workflow<MyItem>;
-  private _items: Item<MyItem>[] = [];
-
   constructor(
     element: HTMLElement, datasource: IDatasource<MyItem>, template: Template<MyItem>
   ) {
+    this.id = workflowStorage.maxId++;
     this.viewport = element;
     this.datasource = datasource;
     this.template = template;
-    this.init();
-  }
 
-  init(): void {
     this.prepareViewport();
-    this.workflow = new Workflow<MyItem>({
+    workflowStorage.add({
+      id: this.id,
       consumer,
       element: this.scrollable,
-      datasource: this.datasource,
-      run: (items) => this.items = items,
+      datasource: this.datasource as IDatasource,
+      onItemsChanged: this.updateViewport.bind(this)
     });
   }
 
   dispose(): void {
-    this.workflow.dispose();
-  }
-
-  set items(items: Item<MyItem>[]) {
-    if (!items.length && !this._items.length) {
-      return;
-    }
-    this.updateViewport(this._items, items);
-    this._items = items;
+    workflowStorage.clear(this.id);
   }
 
   prepareViewport(): void {
@@ -64,11 +54,11 @@ export class Scroller<MyItem = unknown> {
     this.scrollable.append(fwdPaddingElement);
   }
 
-  updateViewport(oldItems: Item<MyItem>[], newItems: Item<MyItem>[]): void {
+  updateViewport(oldItems: Item[], newItems: Item[]): void {
     oldItems
       .filter(item => !newItems.includes(item))
       .forEach(item => item.element.remove());
-    const { list, before } = this.makeNewElements(oldItems, newItems);
+    const { list, before } = this.makeNewElements(oldItems as Item<MyItem>[], newItems as Item<MyItem>[]);
     list.forEach(elt =>
       before.insertAdjacentElement('beforebegin', elt)
     );
@@ -77,7 +67,7 @@ export class Scroller<MyItem = unknown> {
   makeNewElements(
     oldItems: Item<MyItem>[], newItems: Item<MyItem>[]
   ): { list: HTMLElement[], before: HTMLElement } {
-    let before = this.workflow.scroller.viewport.paddings.forward.element;
+    let before = workflowStorage.get(this.id).scroller.viewport.paddings.forward.element;
     const list = [];
     for (let i = newItems.length - 1; i >= 0; i--) {
       const item = newItems[i];
