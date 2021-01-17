@@ -1,41 +1,48 @@
-import { Scroller, Datasource, Template, IAdapter } from '../src/index';
+import { Workflow } from 'vscroll';
+
+import { Scroller, Datasource } from '../src/index';
+import { Misc } from './misc/misc';
 
 import { Item as MyItem } from './misc/types';
 
 describe('Common Spec', () => {
 
   describe('Initialization', () => {
-    let viewport: HTMLElement;
-    let scroller: Scroller<MyItem>;
-
-    const datasource = new Datasource<IAdapter<MyItem>>({
-      get: (index, count, success) => {
-        const data = [];
-        for (let i = index; i <= index + count - 1; i++) {
-          data.push({ id: i, text: 'item #' + i });
-        }
-        success(data);
-      },
-    });
-
-    const template: Template<MyItem> = item =>
-      `<div class="item"><span>${item.data.id}</span>) ${item.data.text}</div>`;
+    let misc: Misc<MyItem>;
 
     beforeEach(() => {
-      viewport = document.createElement('div');
-      viewport.classList.add('viewport');
-      viewport.setAttribute('id', 'viewport');
-      document.body.appendChild(viewport);
-      scroller = new Scroller<MyItem>(viewport, datasource, template);
+      misc = new Misc<MyItem>();
     });
 
-    it('should instantiate', (done) => {
-      expect(scroller instanceof Scroller).toBe(true);
-      expect(scroller.viewport).toBe(viewport);
-      expect(scroller.datasource).toBe(datasource);
-      expect(scroller.template).toBe(template);
-      done();
+    afterEach(() => {
+      misc.clear();
     });
+
+    it('should instantiate', () => {
+      expect(misc.appScroller instanceof Scroller).toBe(true);
+      expect(misc.workflow instanceof Workflow).toBe(true);
+      expect(misc.datasource).toBe(misc.appScroller.datasource);
+      expect(misc.datasource instanceof Datasource).toBe(true);
+      expect(misc.adapter).toBe(misc.appScroller.datasource.adapter);
+    });
+
+    it('should provide correct HTML on start', () => {
+      const { viewport } = misc.workflow.scroller;
+      expect(viewport.element.nodeType).toBe(1);
+      expect(viewport.hostElement.nodeType).toBe(1);
+      expect(viewport.paddings.backward.element.nodeType).toBe(1);
+      expect(viewport.paddings.forward.element.nodeType).toBe(1);
+      expect(viewport.hostElement).toBe(misc.element);
+    });
+
+    it('should initialize', (done) => {
+      expect(misc.datasource.adapter.init).toBe(false);
+      misc.datasource.adapter.init$.on(() => {
+        expect(misc.datasource.adapter.init).toBe(true);
+        done();
+      });
+    });
+
   });
 
 });

@@ -9,12 +9,12 @@ interface WorkflowBox {
 
 type WorkflowParams = ConstructorParameters<typeof Workflow>[0];
 
-export interface MyWorkflowParams extends Omit<WorkflowParams, 'run'> {
+interface MyWorkflowParams extends Omit<WorkflowParams, 'run'> {
   id: Id;
   onItemsChanged: (oldItems: Item[], newItems: Item[]) => void;
 }
 
-export class WorkflowStorage {
+class WorkflowStorage {
   maxId: Id = 0; // increment only!
   map: Map<Id, WorkflowBox> = new Map();
 

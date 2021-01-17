@@ -27,7 +27,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "vscroll": "^1.0.0-rc.1"
+    "vscroll": "^1.0.0-rc.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
