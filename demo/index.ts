@@ -26,7 +26,7 @@ const datasource = new Datasource<IAdapter<MyItem>>({
 const template: Template<MyItem> = item =>
   `<div class="item"><span>${item.data.id}</span>) ${item.data.text}</div>`;
 
-const scroller = new Scroller<MyItem>(element, datasource, template);
+new Scroller<MyItem>(element, datasource, template);
 
 datasource.adapter.init$.once(async () => {
   console.log(JSON.stringify(datasource.adapter.packageInfo));

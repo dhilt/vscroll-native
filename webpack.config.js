@@ -6,7 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: {
-    bundle: [
+    index: [
       './demo/index.ts'
     ]
   },
@@ -45,6 +45,18 @@ module.exports = {
     }),
   ],
   optimization: {
+    splitChunks: {
+      cacheGroups: {
+        default: false,
+        vendors: false,
+        node_modules: {
+          name: 'vendors',
+          chunks: 'all',
+          test: /node_modules/,
+          priority: 40
+        },
+      },
+    },
     minimizer: [new TerserPlugin({
       extractComments: false,
     })],
