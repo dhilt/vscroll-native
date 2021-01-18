@@ -9,6 +9,9 @@
   "fesm5": "dist/bundles/vscroll-native.esm5.js",
   "fesm2015": "dist/bundles/vscroll-native.esm6.js",
   "types": "dist/typings/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "author": "Denis Hilt <dhilt.public@gmail.com>",
   "repository": {
     "type": "git",
@@ -62,10 +65,14 @@
   "keywords": [
     "vscroll",
     "virtual",
+    "virtualized",
     "scroll",
     "scrolling",
     "scroller",
+    "list",
+    "ui",
     "javascript",
-    "typescript"
+    "typescript",
+    "native"
   ]
 }

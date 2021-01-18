@@ -41,6 +41,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: './demo/styles.css', to: './styles.css' },
+        { from: './demo/samples/cdn/index.html', to: './samples/cdn/index.html' },
+        { from: './demo/samples/cdn/cdn.js', to: './samples/cdn/cdn.js' },
       ],
     }),
   ],

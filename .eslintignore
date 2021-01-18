@@ -2,3 +2,4 @@ node_modules
 dist
 dist-demo
 build
+demo/**/*.js
