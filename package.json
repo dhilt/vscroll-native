@@ -1,6 +1,6 @@
 {
   "name": "vscroll-native",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Virtual scroll module for native javascript applications",
   "main": "dist/bundles/vscroll-native.umd.js",
   "module": "dist/bundles/vscroll-native.esm5.js",

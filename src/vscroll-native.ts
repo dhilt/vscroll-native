@@ -57,7 +57,7 @@ export class Scroller<MyItem = unknown> {
   updateViewport(oldItems: Item[], newItems: Item[]): void {
     oldItems
       .filter(item => !newItems.includes(item))
-      .forEach(item => item.element.remove());
+      .forEach(item => item.element && item.element.remove());
     const { list, before } = this.makeNewElements(oldItems as Item<MyItem>[], newItems as Item<MyItem>[]);
     list.forEach(elt =>
       before.insertAdjacentElement('beforebegin', elt)
