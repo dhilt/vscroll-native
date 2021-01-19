@@ -1,0 +1,1 @@
+(t=>{const e=document.getElementById("viewport");if(!e)throw"No viewport found";new t(e,new VScrollNative.Datasource({get:(t,e,o)=>{const i=[];for(let o=t;o<=t+e-1;o++)i.push({id:o,text:"item #"+o});o(i)},devSettings:{debug:!1}}),(t=>`<div class="item"><span>${t.data.id}</span>) ${t.data.text}</div>`))})(VScrollNative.Scroller);
