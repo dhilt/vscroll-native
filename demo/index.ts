@@ -1,9 +1,21 @@
 import { Scroller, Datasource, IAdapter, Template } from '../src/index';
 
-const element = document.getElementById('viewport');
-if (!element) {
-  throw 'No viewport found';
-}
+const elements = {
+  viewport: document.getElementById('viewport'),
+  core: document.getElementById('core'),
+  consumer: document.getElementById('consumer'),
+  counter: document.getElementById('counter'),
+  minIndex: document.getElementById('minIndex'),
+  maxIndex: document.getElementById('maxIndex'),
+  reload: document.getElementById('reload'),
+  scroll: document.getElementById('scroll'),
+} as { [key: string]: HTMLElement };
+
+Object.entries(elements).forEach(([key, element]) => {
+  if (!element) {
+    throw `No ${key} element found`;
+  }
+});
 
 interface MyItem {
   id: number;
@@ -26,14 +38,31 @@ const datasource = new Datasource<IAdapter<MyItem>>({
 const template: Template<MyItem> = item =>
   `<div class="item"><span>${item.data.id}</span>) ${item.data.text}</div>`;
 
-new Scroller<MyItem>(element, datasource, template);
+new Scroller<MyItem>(elements.viewport, datasource, template);
 
-datasource.adapter.init$.once(async () => {
-  console.log(JSON.stringify(datasource.adapter.packageInfo));
-  let MAX = 50;
-  performance.mark('1');
-  while (MAX--) {
-    datasource.adapter.fix({ scrollPosition: Infinity });
+const { adapter } = datasource;
+
+adapter.init$.once(() => {
+  elements.core.innerHTML = adapter.packageInfo.core.name + ' v' + adapter.packageInfo.core.version;
+  elements.consumer.innerHTML = adapter.packageInfo.consumer.name + ' v' + adapter.packageInfo.consumer.version;
+});
+
+adapter.isLoading$.on(isLoading => {
+  const { minIndex, maxIndex, firstIndex, lastIndex } = adapter.bufferInfo;
+  elements.counter.innerHTML = isNaN(firstIndex) || isNaN(lastIndex) ? '' : String(lastIndex - firstIndex);
+  elements.minIndex.innerHTML = String(minIndex);
+  elements.maxIndex.innerHTML = String(maxIndex);
+});
+
+elements.reload.addEventListener('click', () =>
+  adapter.reload()
+);
+
+elements.scroll.addEventListener('click', async () => {
+  let interrupt = false;
+  setTimeout(() => interrupt = true, 2000);
+  while (!interrupt) {
+    adapter.fix({ scrollPosition: Infinity });
     await new Promise(resolve =>
       requestAnimationFrame(async () => {
         await datasource.adapter.relax();
@@ -41,6 +70,4 @@ datasource.adapter.init$.once(async () => {
       })
     );
   }
-  performance.measure('2');
-  console.log(performance.getEntriesByType('measure'));
 });
