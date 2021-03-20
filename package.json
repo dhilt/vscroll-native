@@ -29,7 +29,7 @@
     "jest": "jest --watch",
     "jest:singlerun": "jest",
     "test": "npm run lint && npm run jest:singlerun",
-    "prepare": "npm run test && npm run build"
+    "prepublishOnly": "npm run test && npm run build"
   },
   "dependencies": {
     "vscroll": "^1.0.0-rc.8"
