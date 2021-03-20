@@ -6,6 +6,6 @@ import {
 
 import { Scroller, Template } from './vscroll-native';
 
-const Datasource = makeDatasource<IAdapter>();
+const Datasource = makeDatasource();
 
 export { Scroller, Datasource, Template, IDatasource, IAdapter };

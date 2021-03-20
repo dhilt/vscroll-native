@@ -1,4 +1,4 @@
-import { Scroller, Datasource, IAdapter, Template } from '../src/index';
+import { Scroller, Datasource, Template } from '../src/index';
 
 const elements = {
   viewport: document.getElementById('viewport'),
@@ -22,7 +22,7 @@ interface MyItem {
   text: string;
 }
 
-const datasource = new Datasource<IAdapter<MyItem>>({
+const datasource = new Datasource<MyItem>({
   get: (index, count, success) => {
     const data: MyItem[] = [];
     for (let i = index; i <= index + count - 1; i++) {
@@ -47,7 +47,7 @@ adapter.init$.once(() => {
   elements.consumer.innerHTML = adapter.packageInfo.consumer.name + ' v' + adapter.packageInfo.consumer.version;
 });
 
-adapter.isLoading$.on(isLoading => {
+adapter.isLoading$.on(() => {
   const { minIndex, maxIndex, firstIndex, lastIndex } = adapter.bufferInfo;
   elements.counter.innerHTML = isNaN(firstIndex) || isNaN(lastIndex) ? '' : String(lastIndex - firstIndex);
   elements.minIndex.innerHTML = String(minIndex);

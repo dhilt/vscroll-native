@@ -11,11 +11,11 @@ type DatasourceWithAdapter<MyItem> = IDatasource<MyItem> & {
 const templateDefault: Template<Item> = item =>
   `<div class="item"><span>${item.data.id}</span>) ${item.data.text}</div>`;
 
-const getDefaultDatasource = <MyItem>() => new Datasource<IAdapter<MyItem>>({
+const getDefaultDatasource = <MyItem>() => new Datasource<MyItem>({
   get: (index, count, success) => {
-    const data = [];
+    const data: MyItem[] = [];
     for (let i = index; i <= index + count - 1; i++) {
-      data.push({ id: i, text: 'item #' + i });
+      data.push({ id: i, text: 'item #' + i } as unknown as MyItem);
     }
     success(data);
   },
