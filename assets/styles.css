@@ -53,6 +53,10 @@ img {
   -o-box-shadow: 0 0 5px #ebebeb;
   -ms-box-shadow: 0 0 5px #ebebeb;
 }
+table {
+  line-height: 1;
+  border-spacing: 0;
+}
 
 hr {
   color: #000;
@@ -100,6 +104,7 @@ button:hover {
 }
 #main_content {
   padding-top: 40px;
+  padding-bottom: 40px;
 }
 #footer_wrap {
   background: #212121;
@@ -133,12 +138,15 @@ footer a {
   clear: both;
 }
 
-/* specific */
+/* viewport */
 
 .viewport {
   height: 240px;
   width: 150px;
   overflow-y: scroll;
+}
+.item {
+  height: 24px;
 }
 .item span {
   font-size: small;
