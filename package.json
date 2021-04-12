@@ -1,6 +1,6 @@
 {
   "name": "vscroll-native",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Virtual scroll module for native javascript applications",
   "main": "dist/bundles/vscroll-native.umd.js",
   "module": "dist/bundles/vscroll-native.esm5.js",
@@ -29,10 +29,11 @@
     "jest": "jest --watch",
     "jest:singlerun": "jest",
     "test": "npm run lint && npm run jest:singlerun",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run test",
+    "prepack": "npm run build"
   },
   "dependencies": {
-    "vscroll": "^1.0.0-rc.8"
+    "vscroll": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
