@@ -1,5 +1,4 @@
-import { Workflow } from 'vscroll';
-
+import { Workflow } from '../../src/vscroll';
 import { Scroller as AppScroller, Datasource, IAdapter, Template, IDatasource } from '../../src/index';
 import { workflowStorage } from '../../src/workflow-storage';
 import { Item } from './types';

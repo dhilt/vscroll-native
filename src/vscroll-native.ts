@@ -2,7 +2,7 @@ import {
   IDatasource,
   Item,
   IAdapterItem,
-} from 'vscroll';
+} from './vscroll';
 
 import consumer from './version';
 
@@ -86,7 +86,7 @@ export class Scroller<MyItem = unknown> {
 
   createItemElement(item: Item<MyItem>): HTMLElement {
     const element = document.createElement('div');
-    element.setAttribute('data-sid', item.nodeId);
+    element.setAttribute('data-sid', String(item.$index));
     if (item.invisible) {
       element.style.position = 'fixed';
       element.style.left = '-99999px';

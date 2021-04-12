@@ -1,4 +1,4 @@
-import { Workflow, Item } from 'vscroll';
+import { Workflow, Item } from './vscroll';
 
 export type Id = number;
 

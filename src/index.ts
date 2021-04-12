@@ -2,7 +2,7 @@ import {
   IDatasource,
   IAdapter,
   makeDatasource,
-} from 'vscroll';
+} from './vscroll';
 
 import { Scroller, Template } from './vscroll-native';
 
