@@ -10,19 +10,18 @@ interface WorkflowBox {
 type WorkflowParams = ConstructorParameters<typeof Workflow>[0];
 
 interface MyWorkflowParams extends Omit<WorkflowParams, 'run'> {
-  id: Id;
   onItemsChanged: (oldItems: Item[], newItems: Item[]) => void;
 }
 
 class WorkflowStorage {
-  maxId: Id = 0; // increment only!
+  maxId: Id = 0;
   map: Map<Id, WorkflowBox> = new Map();
 
-  add(params: MyWorkflowParams): void {
+  add(params: MyWorkflowParams): Id {
     const box = {
       items: []
     } as unknown as WorkflowBox;
-    const workflow = new Workflow({
+    box.workflow = new Workflow({
       consumer: params.consumer,
       element: params.element,
       datasource: params.datasource,
@@ -34,8 +33,9 @@ class WorkflowStorage {
         box.items = items;
       }
     });
-    box.workflow = workflow;
-    this.map.set(params.id, box);
+    this.maxId++;
+    this.map.set(this.maxId, box);
+    return this.maxId;
   }
 
   getBox(id: Id): WorkflowBox {

@@ -8,26 +8,24 @@ import consumer from './version';
 
 import { Id, workflowStorage } from './workflow-storage';
 
-export type Template<MyItem = unknown> = (item: IAdapterItem<MyItem>) => string;
+export type Template<Data = unknown> = (item: IAdapterItem<Data>) => string;
 
-export class Scroller<MyItem = unknown> {
+export class Scroller<Data = unknown> {
   id: Id;
   viewport: HTMLElement;
-  datasource: IDatasource<MyItem>;
-  template: Template<MyItem>;
+  datasource: IDatasource<Data>;
+  template: Template<Data>;
   scrollable: HTMLElement;
 
   constructor(
-    element: HTMLElement, datasource: IDatasource<MyItem>, template: Template<MyItem>
+    element: HTMLElement, datasource: IDatasource<Data>, template: Template<Data>
   ) {
-    this.id = workflowStorage.maxId++;
     this.viewport = element;
     this.datasource = datasource;
     this.template = template;
+    this.scrollable = element.querySelector('[data-vscroll]') as HTMLElement;
 
-    this.prepareViewport();
-    workflowStorage.add({
-      id: this.id,
+    this.id = workflowStorage.add({
       consumer,
       element: this.scrollable,
       datasource: this.datasource as IDatasource,
@@ -39,33 +37,18 @@ export class Scroller<MyItem = unknown> {
     workflowStorage.clear(this.id);
   }
 
-  prepareViewport(): void {
-    while (this.viewport.firstChild) {
-      this.viewport.removeChild(this.viewport.firstChild);
-    }
-    this.scrollable = document.createElement('div');
-    this.scrollable.setAttribute('vscroll', '');
-    this.viewport.append(this.scrollable);
-    const bwdPaddingElement = document.createElement('div');
-    bwdPaddingElement.setAttribute('data-padding-backward', '');
-    const fwdPaddingElement = document.createElement('div');
-    fwdPaddingElement.setAttribute('data-padding-forward', '');
-    this.scrollable.append(bwdPaddingElement);
-    this.scrollable.append(fwdPaddingElement);
-  }
-
   updateViewport(oldItems: Item[], newItems: Item[]): void {
     oldItems
       .filter(item => !newItems.includes(item))
       .forEach(item => item.element && item.element.remove());
-    const { list, before } = this.makeNewElements(oldItems as Item<MyItem>[], newItems as Item<MyItem>[]);
+    const { list, before } = this.makeNewElements(oldItems as Item<Data>[], newItems as Item<Data>[]);
     list.forEach(elt =>
       before.insertAdjacentElement('beforebegin', elt)
     );
   }
 
   makeNewElements(
-    oldItems: Item<MyItem>[], newItems: Item<MyItem>[]
+    oldItems: Item<Data>[], newItems: Item<Data>[]
   ): { list: HTMLElement[], before: HTMLElement } {
     let before = workflowStorage.get(this.id).scroller.viewport.paddings.forward.element;
     const list = [];
@@ -84,14 +67,15 @@ export class Scroller<MyItem = unknown> {
     return { before, list };
   }
 
-  createItemElement(item: Item<MyItem>): HTMLElement {
-    const element = document.createElement('div');
+  createItemElement(item: Item<Data>): HTMLElement {
+    const template = document.createElement('template');
+    template.innerHTML = this.template(item.get());
+    const element = template.content.childNodes[0] as HTMLElement;
     element.setAttribute('data-sid', String(item.$index));
     if (item.invisible) {
       element.style.position = 'fixed';
       element.style.left = '-99999px';
     }
-    element.innerHTML = this.template(item.get());
     return element;
   }
 }
