@@ -64,8 +64,10 @@ module.exports = {
     })],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist-demo'),
+    static: path.join(__dirname, 'dist-demo'),
     port: 5000,
-    writeToDisk: true
+    devMiddleware: {
+      writeToDisk: true
+    }
   }
 };
