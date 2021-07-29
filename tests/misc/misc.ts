@@ -37,7 +37,11 @@ export class Misc<Data> {
     this.datasource = getDefaultDatasource();
     this.adapter = this.datasource.adapter;
 
-    this.appScroller = new AppScroller<Data>(this.element, this.datasource, template);
+    this.appScroller = new AppScroller<Data>({
+      element: this.element,
+      datasource: this.datasource,
+      template
+    });
 
     this.workflow = workflowStorage.get(this.appScroller.id);
     this.scroller = this.workflow.scroller;

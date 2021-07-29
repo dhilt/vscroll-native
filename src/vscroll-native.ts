@@ -10,6 +10,12 @@ import { Id, workflowStorage } from './workflow-storage';
 
 export type Template<Data = unknown> = (item: IAdapterItem<Data>) => string;
 
+interface IScrollerParams<Data = unknown> {
+  element: HTMLElement;
+  datasource: IDatasource<Data>;
+  template: Template<Data>;
+}
+
 export class Scroller<Data = unknown> {
   id: Id;
   viewport: HTMLElement;
@@ -17,9 +23,9 @@ export class Scroller<Data = unknown> {
   template: Template<Data>;
   scrollable: HTMLElement;
 
-  constructor(
-    element: HTMLElement, datasource: IDatasource<Data>, template: Template<Data>
-  ) {
+  constructor({
+    element, datasource, template
+  }: IScrollerParams<Data>) {
     this.viewport = element;
     this.datasource = datasource;
     this.template = template;

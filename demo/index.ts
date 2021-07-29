@@ -39,7 +39,11 @@ const template: Template<MyItem> = item =>
   `<div class="item"><span>${item.data.id}</span>) ${item.data.text}</div>`;
 // `<tr class="item"><td><span>${item.data.id}</span>) ${item.data.text}</td></tr>`;
 
-new Scroller<MyItem>(elements.viewport, datasource, template);
+new Scroller<MyItem>({
+  element: elements.viewport,
+  datasource,
+  template
+});
 
 const { adapter } = datasource;
 
