@@ -8,6 +8,8 @@ import consumer from './version';
 
 import { Id, workflowStorage } from './workflow-storage';
 
+const VSCROLL_ELEMENT_ATTR = 'data-vscroll';
+
 export type Template<Data = unknown> = (item: IAdapterItem<Data>) => string;
 
 interface IScrollerParams<Data = unknown> {
@@ -26,10 +28,13 @@ export class Scroller<Data = unknown> {
   constructor({
     element, datasource, template
   }: IScrollerParams<Data>) {
+    if (!element) {
+      throw 'No viewport element found';
+    }
     this.viewport = element;
     this.datasource = datasource;
     this.template = template;
-    this.scrollable = element.querySelector('[data-vscroll]') as HTMLElement;
+    this.setScrollableDefaults();
 
     this.id = workflowStorage.add({
       consumer,
@@ -43,7 +48,23 @@ export class Scroller<Data = unknown> {
     workflowStorage.clear(this.id);
   }
 
-  updateViewport(oldItems: Item[], newItems: Item[]): void {
+  private setScrollableDefaults(): void {
+    this.scrollable = this.viewport.querySelector(`[${VSCROLL_ELEMENT_ATTR}]`) as HTMLElement;
+    if (this.scrollable) {
+      return;
+    }
+    this.scrollable = document.createElement('div');
+    this.scrollable.setAttribute(VSCROLL_ELEMENT_ATTR, '');
+    const paddingBackward = document.createElement('div');
+    paddingBackward.setAttribute('data-padding-backward', '');
+    const paddingForward = document.createElement('div');
+    paddingForward.setAttribute('data-padding-forward', '');
+    this.scrollable.appendChild(paddingBackward);
+    this.scrollable.appendChild(paddingForward);
+    this.viewport.appendChild(this.scrollable);
+  }
+
+  private updateViewport(oldItems: Item[], newItems: Item[]): void {
     oldItems
       .filter(item => !newItems.includes(item))
       .forEach(item => item.element && item.element.remove());
@@ -53,8 +74,8 @@ export class Scroller<Data = unknown> {
     );
   }
 
-  makeNewElements(
-    oldItems: Item<Data>[], newItems: Item<Data>[]
+  private makeNewElements(
+    oldItems: Item[], newItems: Item<Data>[]
   ): { list: HTMLElement[], before: HTMLElement } {
     let before = workflowStorage.get(this.id).scroller.viewport.paddings.forward.element;
     const list = [];
@@ -73,7 +94,7 @@ export class Scroller<Data = unknown> {
     return { before, list };
   }
 
-  createItemElement(item: Item<Data>): HTMLElement {
+  private createItemElement(item: Item<Data>): HTMLElement {
     const template = document.createElement('template');
     template.innerHTML = this.template(item.get());
     const element = template.content.childNodes[0] as HTMLElement;

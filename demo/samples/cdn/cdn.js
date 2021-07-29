@@ -1,9 +1,6 @@
 ((Scroller) => {
 
   const element = document.getElementById('viewport');
-  if (!element) {
-    throw 'No viewport found';
-  }
 
   const datasource = new VScrollNative.Datasource({
     get: (index, count, success) => {
