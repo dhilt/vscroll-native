@@ -48,8 +48,9 @@ new Scroller<MyItem>({
 const { adapter } = datasource;
 
 adapter.init$.once(() => {
-  elements.core.innerHTML = adapter.packageInfo.core.name + ' v' + adapter.packageInfo.core.version;
-  elements.consumer.innerHTML = adapter.packageInfo.consumer.name + ' v' + adapter.packageInfo.consumer.version;
+  const { core, consumer } = adapter.packageInfo;
+  elements.core.innerHTML = core.name + ' v' + core.version;
+  elements.consumer.innerHTML = consumer.name + ' v' + consumer.version;
 });
 
 adapter.isLoading$.on(() => {
@@ -70,7 +71,7 @@ elements.scroll.addEventListener('click', async () => {
     adapter.fix({ scrollPosition: Infinity });
     await new Promise(resolve =>
       requestAnimationFrame(async () => {
-        await datasource.adapter.relax();
+        await adapter.relax();
         resolve(void 0);
       })
     );

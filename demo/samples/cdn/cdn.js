@@ -1,17 +1,14 @@
-((Scroller) => {
+(({ Scroller, Datasource }) => {
 
   const element = document.getElementById('viewport');
 
-  const datasource = new VScrollNative.Datasource({
+  const datasource = new Datasource({
     get: (index, count, success) => {
       const data = [];
       for (let i = index; i <= index + count - 1; i++) {
         data.push({ id: i, text: 'item #' + i });
       }
       success(data);
-    },
-    devSettings: {
-      debug: false
     }
   });
 
@@ -20,5 +17,10 @@
 
   const scroller = new Scroller({ element, datasource, template });
 
+  datasource.adapter.init$.once(() => {
+    console.log('It works');
+    console.log(datasource.adapter.packageInfo.core);
+    console.log(datasource.adapter.packageInfo.consumer);
+  });
 
-})(VScrollNative.Scroller);
+})(VScrollNative);
