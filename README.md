@@ -228,4 +228,4 @@ There are some npm scripts:
 ______
 
 
-2021 &copy; [Denis Hilt](https://github.com/dhilt)
+2022 &copy; [Denis Hilt](https://github.com/dhilt)
