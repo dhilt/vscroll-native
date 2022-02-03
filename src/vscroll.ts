@@ -5,4 +5,5 @@ export {
   IAdapter,
   Item,
   IAdapterItem,
+  IRoutines,
 } from 'vscroll'; // '../../vscroll/src/index';

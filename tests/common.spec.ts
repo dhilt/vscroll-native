@@ -27,12 +27,12 @@ describe('Common Spec', () => {
     });
 
     it('should provide correct HTML on start', () => {
-      const { viewport } = misc.workflow.scroller;
-      expect(viewport.element.nodeType).toBe(1);
-      expect(viewport.hostElement.nodeType).toBe(1);
+      const { viewport, routines } = misc.workflow.scroller;
+      expect(routines.element.nodeType).toBe(1);
+      expect(routines.viewport.nodeType).toBe(1);
       expect(viewport.paddings.backward.element.nodeType).toBe(1);
       expect(viewport.paddings.forward.element.nodeType).toBe(1);
-      expect(viewport.hostElement).toBe(misc.element);
+      expect(routines.viewport).toBe(misc.element);
     });
 
     it('should initialize', (done) => {
