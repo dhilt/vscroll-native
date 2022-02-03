@@ -22,18 +22,8 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "esModuleInterop": true,
-    "lib": [
-      "es2015",
-      "dom",
-      "es2017"
-    ],
-    "typeRoots": [
-      "node_modules/@types/"
-    ]
+    "lib": ["es2015", "dom", "es2017"],
+    "typeRoots": ["node_modules/@types/"]
   },
-  "exclude": [
-    "dist",
-    "dist-demo",
-    "node_modules"
-  ]
+  "exclude": ["dist", "dist-demo", "node_modules"]
 }
